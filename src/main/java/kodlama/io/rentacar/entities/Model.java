@@ -1,5 +1,6 @@
 package kodlama.io.rentacar.entities;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,12 +14,16 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "brands")
-public class Brand {
+@Table(name = "models")
+public class Model {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
-    @OneToMany(mappedBy = "brand")
-    private List<Model> models;
+    @ManyToOne
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
+    @OneToMany(mappedBy = "model")
+    private List<Car> cars;
 }
