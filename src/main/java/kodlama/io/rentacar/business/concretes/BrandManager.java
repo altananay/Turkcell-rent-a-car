@@ -20,6 +20,13 @@ import java.util.List;
 @AllArgsConstructor
 public class BrandManager implements BrandService {
 
+    /*arabalar bakıma (maintenance) gönderilebilmelidir.
+     Bakımdan gelen araba yeniden kiralanabilir duruma gelmelidir.
+      Zaten bakımda olan araba bakıma gönderilememez. Kirada olan araba bakıma gönderilemez.
+       Bakımda olan araba araba listesinde görüntülenip görüntülenmeyeceğine kullanıcıdan bir parametre alarak gelmelidir
+        veya gelmemelidir.
+     */
+
     private final BrandRepository repository;
     private final ModelMapper mapper;
 
@@ -43,8 +50,8 @@ public class BrandManager implements BrandService {
     public CreateBrandResponse add(CreateBrandRequest request) {
         Brand brand = mapper.map(request, Brand.class);
         brand.setId(0);
-        repository.save(brand);
-        CreateBrandResponse response = mapper.map(brand, CreateBrandResponse.class);
+        Brand createdBrand = repository.save(brand);
+        CreateBrandResponse response = mapper.map(createdBrand, CreateBrandResponse.class);
         return response;
     }
 
