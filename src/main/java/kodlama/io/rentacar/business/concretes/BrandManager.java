@@ -20,13 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 public class BrandManager implements BrandService {
 
-    /*arabalar bakıma (maintenance) gönderilebilmelidir.
-     Bakımdan gelen araba yeniden kiralanabilir duruma gelmelidir.
-      Zaten bakımda olan araba bakıma gönderilememez. Kirada olan araba bakıma gönderilemez.
-       Bakımda olan araba araba listesinde görüntülenip görüntülenmeyeceğine kullanıcıdan bir parametre alarak gelmelidir
-        veya gelmemelidir.
-     */
-
     private final BrandRepository repository;
     private final ModelMapper mapper;
 

@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 import static kodlama.io.rentacar.entities.enums.State.*;
@@ -77,41 +78,6 @@ public class CarManager implements CarService {
         Car car = repository.findById(id).orElseThrow();
         GetCarResponse response = mapper.map(car, GetCarResponse.class);
         return response;
-    }
-
-    @Override
-    public UpdateCarStateSendMaintanceResponse sendMaintenance(int id) {
-        checkIfCarExists(id);
-        Car car = repository.findById(id).orElseThrow();
-        validateMaintenance(car);
-        car.setState(MAINTANCE);
-        repository.save(car);
-        UpdateCarStateSendMaintanceResponse response = mapper.map(car,UpdateCarStateSendMaintanceResponse.class);
-        return response;
-    }
-
-    @Override
-    public UpdateCarStateReturnMaintanceResponse returnMaintenance(int id) {
-        checkIfCarExists(id);
-        Car car = repository.findById(id).orElseThrow();
-        validateMaintenance(car);
-        car.setState(AVAILABLE);
-        repository.save(car);
-        UpdateCarStateReturnMaintanceResponse response = mapper.map(car,UpdateCarStateReturnMaintanceResponse.class);
-        return response;
-    }
-
-    public void validateMaintenance(Car car) {
-        checkIfCarRentedforMaintenance(car);
-        checkIfCarAvailableforMaintenance(car);
-    }
-
-    public void checkIfCarAvailableforMaintenance(Car car) {
-        if (car.getState().equals(MAINTANCE)) throw new RuntimeException("Araç zaten bakımda");
-    }
-
-    public void checkIfCarRentedforMaintenance(Car car) {
-        if (car.getState().equals(RENTED)) throw new RuntimeException("Araç şuan kirada");
     }
 
     public void checkIfCarExists(int id) {

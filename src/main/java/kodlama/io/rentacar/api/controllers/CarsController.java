@@ -59,14 +59,4 @@ public class CarsController {
     {
         service.delete(id);
     }
-
-    @PutMapping("/sendMaintenance/{id}")
-    public UpdateCarStateSendMaintanceResponse sendMaintenance(@PathVariable int id) {
-        return service.sendMaintenance(id);
-    }
-
-    @PutMapping("/returnMaintenance/{id}")
-    public UpdateCarStateReturnMaintanceResponse returnMaintenance(@PathVariable int id) {
-        return service.returnMaintenance(id);
-    }
 }

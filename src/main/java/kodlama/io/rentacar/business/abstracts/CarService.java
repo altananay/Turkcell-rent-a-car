@@ -19,6 +19,6 @@ public interface CarService {
     void delete(int id);
     UpdateCarResponse update(int id, UpdateCarRequest request);
     GetCarResponse getById(int id);
-    UpdateCarStateSendMaintanceResponse sendMaintenance(int id);
-    UpdateCarStateReturnMaintanceResponse returnMaintenance(int id);
+
+    void checkIfCarExists(int id);
 }

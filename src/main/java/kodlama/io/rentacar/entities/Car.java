@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -25,4 +27,6 @@ public class Car {
     private State state;
     @ManyToOne
     private Model model;
+    @OneToMany(mappedBy = "car")
+    private List<Maintance> maintances;
 }
