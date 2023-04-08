@@ -45,6 +45,12 @@ public class RentalsController {
         return service.getById(id);
     }
 
+    @PutMapping("/return")
+    public GetRentalResponse returnCarFromRented(@RequestParam int id)
+    {
+        return service.returnCarFromRented(id);
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable int id)

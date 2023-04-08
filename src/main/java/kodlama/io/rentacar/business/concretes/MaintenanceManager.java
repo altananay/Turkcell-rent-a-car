@@ -69,8 +69,6 @@ public class MaintenanceManager implements MaintenanceService {
         return response;
     }
 
-
-
     @Override
     public UpdateMaintenanceResponse update(int id, UpdateMaintenanceRequest request) {
         checkIfMaintenancesExists(id);
@@ -110,7 +108,7 @@ public class MaintenanceManager implements MaintenanceService {
 
     private void checkCarAvailabilityForMaintenance(int carId)
     {
-        if (carService.getById(carId).getState().equals(State.RENTED))
+        if (carService.getById(carId).getState() == State.RENTED.toString())
             throw new RuntimeException("Araç kirada olduğu için bakıma alınamaz");
     }
 

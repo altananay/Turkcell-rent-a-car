@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 public class UpdateRentalRequest {
     private int carId;
-    private double carDailyPrice, totalPrice;
+    private double dailyPrice;
     private int rentedForDays;
     private LocalDateTime startDate;
 }

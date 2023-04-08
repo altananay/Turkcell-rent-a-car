@@ -1,5 +1,6 @@
 package kodlama.io.rentacar.business.concretes;
 
+
 import kodlama.io.rentacar.business.abstracts.CarService;
 import kodlama.io.rentacar.business.abstracts.MaintenanceService;
 import kodlama.io.rentacar.business.abstracts.RentalService;
@@ -45,11 +46,12 @@ public class RentalManager implements RentalService {
     }
 
     @Override
-    public GetRentalResponse returnCarFromRented(int carId) {
-        carService.checkIfCarExists(carId);
-        Rental rental = rentalRepository.findRentalByCarId(carId);
+    public GetRentalResponse returnCarFromRented(int id) {
+        checkIfRentalExists(id);
+        Rental rental = rentalRepository.findById(id).orElseThrow();
+        checkIfNotCarUnderRented(rental.getCar().getId());
         rental.setEndDate(LocalDateTime.now());
-        carService.changeState(carId, State.AVAILABLE);
+        carService.changeState(rental.getCar().getId(), State.AVAILABLE);
         rentalRepository.save(rental);
         GetRentalResponse response = mapper.map(rental, GetRentalResponse.class);
         return response;
@@ -74,6 +76,7 @@ public class RentalManager implements RentalService {
         checkIfRentalExists(id);
         Rental rental = mapper.map(request, Rental.class);
         rental.setId(id);
+        getTotalPrice(rental);
         rentalRepository.save(rental);
         UpdateRentalResponse response = mapper.map(rental, UpdateRentalResponse.class);
         return response;
@@ -104,6 +107,13 @@ public class RentalManager implements RentalService {
         Car car = mapper.map(carService.getById(carId), Car.class);
         if (car.getState().equals(State.RENTED))
             throw new RuntimeException("Araba zaten kirada");
+    }
+
+    private void checkIfNotCarUnderRented(int carId)
+    {
+        Car car = mapper.map(carService.getById(carId), Car.class);
+        if (!car.getState().equals(State.RENTED))
+            throw new RuntimeException("Araba kirada değil.");
     }
 
     private void makeCarAvailable(int id)
