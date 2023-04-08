@@ -6,19 +6,15 @@ import kodlama.io.rentacar.business.dto.requests.update.UpdateCarRequest;
 import kodlama.io.rentacar.business.dto.responses.create.CreateCarResponse;
 import kodlama.io.rentacar.business.dto.responses.get.GetAllCarsResponse;
 import kodlama.io.rentacar.business.dto.responses.get.GetCarResponse;
-import kodlama.io.rentacar.business.dto.responses.maintance.UpdateCarStateReturnMaintanceResponse;
-import kodlama.io.rentacar.business.dto.responses.maintance.UpdateCarStateSendMaintanceResponse;
 import kodlama.io.rentacar.business.dto.responses.update.UpdateCarResponse;
 import kodlama.io.rentacar.entities.Car;
+import kodlama.io.rentacar.entities.enums.State;
 import kodlama.io.rentacar.repository.CarRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
-
-import static kodlama.io.rentacar.entities.enums.State.*;
 
 @AllArgsConstructor
 @Service
@@ -43,6 +39,7 @@ public class CarManager implements CarService {
 
     @Override
     public UpdateCarResponse update(int id, UpdateCarRequest request) {
+        checkIfCarExists(id);
         Car car = mapper.map(request, Car.class);
         car.setId(id);
         repository.save(car);
@@ -51,36 +48,39 @@ public class CarManager implements CarService {
     }
 
     @Override
-    public List<GetAllCarsResponse> getAll() {
-        List<Car> cars = repository.findAll();
-        List<GetAllCarsResponse> responses = cars.stream()
-                .map(car -> mapper.map(car,GetAllCarsResponse.class)).toList();
-        return responses;
-    }
-
-    @Override
-    public List<GetAllCarsResponse> getAllByState(Boolean filter) {
-        List<Car> cars = repository.findAll();
-        List<GetAllCarsResponse> responses;
-        if (filter == false)
-        {
-             responses = cars.stream().map(car -> mapper.map(car, GetAllCarsResponse.class)).toList();
-        }
-        else {
-            responses = cars.stream().filter(car -> car.getState().toString() == AVAILABLE.name())
-                    .map(car -> mapper.map(car, GetAllCarsResponse.class)).toList();
-        }
+    public List<GetAllCarsResponse> getAll(boolean includeMaintenance) {
+        List<Car> cars = filterCarsByMaintenanceState(includeMaintenance);
+        List<GetAllCarsResponse> responses = cars.stream().map(car -> mapper.map(car, GetAllCarsResponse.class)).toList();
         return responses;
     }
 
     @Override
     public GetCarResponse getById(int id) {
+        checkIfCarExists(id);
         Car car = repository.findById(id).orElseThrow();
         GetCarResponse response = mapper.map(car, GetCarResponse.class);
         return response;
     }
 
+    private List<Car> filterCarsByMaintenanceState(boolean includeMaintenance) {
+        if (includeMaintenance) {
+            return repository.findAll();
+        }
+
+        return repository.findAllByStateIsNot(State.MAINTENANCE);
+    }
+
+    @Override
+    public void changeState(int carId, State state) {
+        checkIfCarExists(carId);
+        Car car = repository.findById(carId).orElseThrow();
+        car.setState(state);
+        repository.save(car);
+    }
+
     public void checkIfCarExists(int id) {
-        if (!repository.existsById(id)) throw new RuntimeException("Marka bulunamadı");
+        if (!repository.existsById(id)) {
+            throw new RuntimeException("Araç bulunamadı.");
+        }
     }
 }

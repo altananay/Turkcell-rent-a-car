@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateCarResponse {
+    private int id;
     private double dailyPrice;
     private int modelYear;
     private String state;

@@ -5,10 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class CreateBrandRequest {
-    private String name;
+public class CreateRentalRequest {
+    private int carId;
+    private double dailyPrice;
+    private int rentedForDays;
 }

@@ -23,15 +23,9 @@ public class CarsController {
     private final CarService service;
 
     @GetMapping
-    public List<GetAllCarsResponse> getAll()
+    public List<GetAllCarsResponse> getAll(@RequestParam(defaultValue = "true") boolean includeMaintenance)
     {
-        return service.getAll();
-    }
-
-    @GetMapping("status/{status}")
-    public List<GetAllCarsResponse> getAll(@PathVariable("status") Boolean filter)
-    {
-        return service.getAllByState(filter);
+        return service.getAll(includeMaintenance);
     }
 
     @GetMapping("/{id}")

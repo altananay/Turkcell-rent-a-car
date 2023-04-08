@@ -1,21 +1,19 @@
 package kodlama.io.rentacar.business.dto.requests.update;
 
-import kodlama.io.rentacar.entities.enums.State;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateMaintanceRequest {
-    private int id;
-    private Date sendDate;
-    private Date returnDate;
+@Getter
+@Setter
+public class UpdateRentalRequest {
     private int carId;
-    private State state;
+    private double carDailyPrice, totalPrice;
+    private int rentedForDays;
+    private LocalDateTime startDate;
 }

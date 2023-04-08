@@ -28,5 +28,5 @@ public class Car {
     @ManyToOne
     private Model model;
     @OneToMany(mappedBy = "car")
-    private List<Maintance> maintances;
+    private List<Maintenance> maintenances;
 }
