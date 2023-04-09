@@ -1,4 +1,4 @@
-package kodlama.io.rentacar.business.dto.requests.create;
+package kodlama.io.rentacar.common.dto;
 
 import kodlama.io.rentacar.business.dto.requests.PaymentRequest;
 import lombok.AllArgsConstructor;
@@ -10,9 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CreateRentalRequest {
-    private int carId;
-    private double dailyPrice;
-    private int rentedForDays;
-    private PaymentRequest paymentRequest;
+public class CreateRentalPaymentRequest extends PaymentRequest {
+    private double price;
 }

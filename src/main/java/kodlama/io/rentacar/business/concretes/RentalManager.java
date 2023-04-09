@@ -3,6 +3,7 @@ package kodlama.io.rentacar.business.concretes;
 
 import kodlama.io.rentacar.business.abstracts.CarService;
 import kodlama.io.rentacar.business.abstracts.MaintenanceService;
+import kodlama.io.rentacar.business.abstracts.PaymentService;
 import kodlama.io.rentacar.business.abstracts.RentalService;
 import kodlama.io.rentacar.business.dto.requests.create.CreateRentalRequest;
 import kodlama.io.rentacar.business.dto.requests.update.UpdateRentalRequest;
@@ -10,6 +11,7 @@ import kodlama.io.rentacar.business.dto.responses.create.CreateRentalResponse;
 import kodlama.io.rentacar.business.dto.responses.get.GetAllRentalsResponse;
 import kodlama.io.rentacar.business.dto.responses.get.GetRentalResponse;
 import kodlama.io.rentacar.business.dto.responses.update.UpdateRentalResponse;
+import kodlama.io.rentacar.common.dto.CreateRentalPaymentRequest;
 import kodlama.io.rentacar.entities.Car;
 import kodlama.io.rentacar.entities.Rental;
 import kodlama.io.rentacar.entities.enums.State;
@@ -29,6 +31,7 @@ public class RentalManager implements RentalService {
     private final ModelMapper mapper;
     private final CarService carService;
     private final MaintenanceService maintenanceService;
+    private final PaymentService paymentService;
 
     @Override
     public List<GetAllRentalsResponse> getAll() {
@@ -64,6 +67,12 @@ public class RentalManager implements RentalService {
         Rental rental = mapper.map(request, Rental.class);
         rental.setId(0);
         rental.setStartDate(LocalDateTime.now());
+
+        CreateRentalPaymentRequest paymentRequest = new CreateRentalPaymentRequest();
+        mapper.map(request.getPaymentRequest(), paymentRequest);
+        paymentRequest.setPrice(getTotalPriceAlternative(rental));
+
+
         carService.changeState(request.getCarId(), State.RENTED);
         getTotalPrice(rental);
         rentalRepository.save(rental);
@@ -88,6 +97,12 @@ public class RentalManager implements RentalService {
         makeCarAvailable(id);
         setEndDate(id);
         //rentalRepository.deleteById(id);
+    }
+
+    private double getTotalPriceAlternative(Rental rental)
+    {
+        double totalPrice = rental.getDailyPrice() * rental.getRentedForDays();
+        return totalPrice;
     }
 
     private Rental getTotalPrice(Rental rental)
