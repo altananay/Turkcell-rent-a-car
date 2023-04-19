@@ -8,6 +8,7 @@ import kodlama.io.rentacar.business.dto.responses.create.CreateBrandResponse;
 import kodlama.io.rentacar.business.dto.responses.get.GetAllBrandsResponse;
 import kodlama.io.rentacar.business.dto.responses.get.GetBrandResponse;
 import kodlama.io.rentacar.business.dto.responses.update.UpdateBrandResponse;
+import kodlama.io.rentacar.business.rules.BrandBusinessRules;
 import kodlama.io.rentacar.entities.Brand;
 import kodlama.io.rentacar.repository.BrandRepository;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ public class BrandManager implements BrandService {
 
     private final BrandRepository repository;
     private final ModelMapper mapper;
+    private final BrandBusinessRules rules;
 
     @Override
     public List<GetAllBrandsResponse> getAll() {
@@ -33,7 +35,7 @@ public class BrandManager implements BrandService {
 
     @Override
     public GetBrandResponse getById(int id) {
-        checkIfExistsId(id);
+        rules.checkIfBrandExists(id);
         Brand brand = repository.findById(id).orElseThrow();
         GetBrandResponse response = mapper.map(brand, GetBrandResponse.class);
         return response;
@@ -41,6 +43,7 @@ public class BrandManager implements BrandService {
 
     @Override
     public CreateBrandResponse add(CreateBrandRequest request) {
+        rules.checkIfBrandExistsByName(request.getName());
         Brand brand = mapper.map(request, Brand.class);
         brand.setId(0);
         Brand createdBrand = repository.save(brand);
@@ -50,7 +53,7 @@ public class BrandManager implements BrandService {
 
     @Override
     public UpdateBrandResponse update(int id, UpdateBrandRequest request) {
-        checkIfExistsId(request.getId());
+        rules.checkIfBrandExists(request.getId());
         Brand brand = mapper.map(request, Brand.class);
         brand.setId(id);
         repository.save(brand);
@@ -60,12 +63,7 @@ public class BrandManager implements BrandService {
 
     @Override
     public void delete(DeleteBrandRequest request) {
-        checkIfExistsId(request.getId());
+        rules.checkIfBrandExists(request.getId());
         repository.deleteById(request.getId());
-    }
-
-    private void checkIfExistsId(int id)
-    {
-        if (!repository.existsById(id)) throw new RuntimeException("Marka bulunamadı");
     }
 }

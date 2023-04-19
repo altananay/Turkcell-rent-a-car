@@ -16,5 +16,4 @@ public interface MaintenanceService {
     CreateMaintenanceResponse add(CreateMaintenanceRequest request);
     UpdateMaintenanceResponse update(int id, UpdateMaintenanceRequest request);
     void delete(int id);
-    void checkIfCarUnderMaintenance(int carId);
 }
