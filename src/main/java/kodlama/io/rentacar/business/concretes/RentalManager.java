@@ -34,7 +34,6 @@ public class RentalManager implements RentalService {
     private final ModelMapper mapper;
     private final CarService carService;
     private final PaymentService paymentService;
-
     private final InvoiceService invoiceService;
     private final RentalBusinessRules rules;
     private final MaintenanceBusinessRules maintenanceBusinessRules;
